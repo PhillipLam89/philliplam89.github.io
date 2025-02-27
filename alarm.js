@@ -53,9 +53,9 @@ function handleAlarmUpdateBtn(e) {
         
   allAlarms.push(timeObj) 
   bigDaddyWrapper.innerHTML = renderAlarmsHTML()
+  addDeleteAlarmListeners()
   addAlarmToggleListeners()
-
-
+  // setTimeout(() => updateAlarmsLIVE_HR_MIN(), 1550)
 
   closeModal()
   localStorage.setItem('alarms', JSON.stringify(allAlarms)) 
@@ -68,7 +68,8 @@ function renderAlarmsHTML() {
   allAlarms.forEach((alarm,i) => {
    format+= `
      <section id=alarm-${i}-wrapper >
-      <h1>alarm: ${alarm.startTimeAMPM} ${alarm.isPM}</h1>
+      <h1 style="color: ${alarm.isActive ? 'black' : 'red'};
+                 text-decoration:${alarm.isActive ? 'underline' : 'line-through'};">alarm:<span class="ampmSPAN" id="AmpmAlarmStartTime-${i}">${alarm.startTimeAMPM} ${alarm.isPM}</span></h1>
       <div class="alarmsWrapper">
         <label class="switch" id="alarmLabel-${i}">
           <input type="checkbox" id="alarmInput-${i}" ${alarm.isActive ? 'checked' : ''}>
@@ -85,7 +86,7 @@ function renderAlarmsHTML() {
 }
 function addDeleteAlarmListeners() {
   const allAlarmDeleteBtns = document.querySelectorAll('.alarmDeleteBtn')
-  allAlarmDeleteBtns.forEach((btn,i) => {
+  allAlarmDeleteBtns.forEach((btn) => {
      btn.onclick = function() {
         const index = this.id.slice(this.id.indexOf('-')+1)
         allAlarms.splice(index,1)
@@ -95,22 +96,42 @@ function addDeleteAlarmListeners() {
   })
 }
 function updateAlarmsLIVE_HR_MIN() {
+  const date = new Date()
+  let exactTime = date.toLocaleString([], {
+        hour: "numeric",
+        minute: "numeric" 
+    });
   
+   for (let i = 0; i < allAlarms.length; i++) {
+       const currentAlarm = document.querySelector(`#AmpmAlarmStartTime-${i}`)
+       if (exactTime == currentAlarm.textContent && document.querySelector(`#alarmInput-${i}`).checked) {
+          // alert('ALARM RINGING FOR ' + currentAlarm.textContent + ' ALARM')
+          currentAlarm.parentElement.style.color = 'red'
+          currentAlarm.parentElement.style.textDecoration = 'line-through'
+          allAlarms[i].isActive = false
+          document.querySelector(`#alarmLabel-${i}`).remove()
+          localStorage.setItem('alarms', JSON.stringify(allAlarms))
+          return
+       }
+   }
+
 }
 alarmTabHTML.onclick = function handleAlarmTabClick(e) {
   if (currentPageDisplayed !== 'alarm') {
-    currentPageDisplayed = 'alarm'
+    currentPageDisplayed = 'alarms'
     savedCurrentTasksHTML = bigDaddyWrapper.innerHTML
     
     bigDaddyWrapper.innerHTML = renderAlarmsHTML()
     alarmSectionWrapper.innerHTML = alarmPageHTML
     addDeleteAlarmListeners()
     addAlarmToggleListeners()
-    updateAlarmsLIVE_HR_MIN()
+    // setTimeout(() => updateAlarmsLIVE_HR_MIN(), 1550)
+
   }
     setAlarmBtn.onclick = (e) => openModal(e.target.id)
     intervals = clearInterval(intervals)
     intervals = setInterval(displayHeaderExactTime,1000)
+  
 }
 
 tasksTabHTML.onclick = function handleTaskTabClick(e) {
