@@ -156,7 +156,6 @@ function displayHeaderExactTime() {
   currentTimeHTML.textContent = `${exactTime}`
 
   if (currentPageDisplayed === 'alarms') {
-    console.log('sdsd')
     updateAlarmsLIVE_HR_MIN()
 
   }

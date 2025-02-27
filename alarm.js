@@ -17,6 +17,9 @@ function addAlarmToggleListeners() {
       if (e.target.tagName !== 'SPAN') return;
       const id = e.target.id.slice(e.target.id.indexOf('-')+1)
       allAlarms[id].isActive = !allAlarms[id].isActive
+      const nodeToEdit = document.querySelector(`#alarm-${id}-wrapper`).children[0]
+      nodeToEdit.style.color = allAlarms[id].isActive ? 'black' : 'red'
+      nodeToEdit.style.textDecoration = allAlarms[id].isActive ? 'none' : 'line-through'
       localStorage.setItem('alarms', JSON.stringify(allAlarms)) 
       
     }
@@ -117,7 +120,7 @@ function updateAlarmsLIVE_HR_MIN() {
 
 }
 alarmTabHTML.onclick = function handleAlarmTabClick(e) {
-  if (currentPageDisplayed !== 'alarm') {
+  if (currentPageDisplayed !== 'alarms') {
     currentPageDisplayed = 'alarms'
     savedCurrentTasksHTML = bigDaddyWrapper.innerHTML
     
