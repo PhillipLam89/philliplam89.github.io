@@ -46,6 +46,7 @@ function handleAlarmUpdateBtn(e) {
   let startingMins = startTimeAPM.slice(3)
       startingHour = startingHour == 0 ? '12' : startingHour
       startingHour = startingHour > 12 ? String(startingHour - 12) : startingHour
+      startingHour = Number(startingHour)
       startingHour+=':'
   const timeObj = {countdownTimeSecs: timeInSeconds,
                    countdownTimeHrs: timeInSeconds / 3600,
@@ -72,7 +73,7 @@ function renderAlarmsHTML() {
    format+= `
      <section id=alarm-${i}-wrapper >
       <h1 style="color: ${alarm.isActive ? 'black' : 'red'};
-                 text-decoration:${alarm.isActive ? 'underline' : 'line-through'};">alarm:<span class="ampmSPAN" id="AmpmAlarmStartTime-${i}">${alarm.startTimeAMPM} ${alarm.isPM}</span></h1>
+                 text-decoration:${alarm.isActive ? 'none' : 'line-through'};">alarm <p class="ampmSPAN" id="AmpmAlarmStartTime-${i}">${alarm.startTimeAMPM} ${alarm.isPM}</p></h1>
       <div class="alarmsWrapper">
         <label class="switch" id="alarmLabel-${i}">
           <input type="checkbox" id="alarmInput-${i}" ${alarm.isActive ? 'checked' : ''}>
