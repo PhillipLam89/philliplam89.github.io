@@ -120,18 +120,16 @@ function updateAlarmsLIVE_HR_MIN() {
    }
 
 }
+taskSwitcherHTML.onclick = highlightCurrentUserChoice
 alarmTabHTML.onclick = function handleAlarmTabClick(e) {
   if (currentPageDisplayed !== 'alarms') {
     currentPageDisplayed = 'alarms'
-    highlightCurrentUserChoice() 
     savedCurrentTasksHTML = bigDaddyWrapper.innerHTML
     
     bigDaddyWrapper.innerHTML = renderAlarmsHTML()
     alarmSectionWrapper.innerHTML = alarmPageHTML
     addDeleteAlarmListeners()
     addAlarmToggleListeners()
-    // setTimeout(() => updateAlarmsLIVE_HR_MIN(), 1550)
-
   }
     setAlarmBtn.onclick = (e) => openModal(e.target.id)
     intervals = clearInterval(intervals)
@@ -142,7 +140,7 @@ alarmTabHTML.onclick = function handleAlarmTabClick(e) {
 tasksTabHTML.onclick = function handleTaskTabClick(e) {
   if (currentPageDisplayed != 'tasks') {
     currentPageDisplayed = 'tasks'
-    highlightCurrentUserChoice() 
+    // highlightCurrentUserChoice() 
     alarmSectionWrapper.innerHTML = ''
     savedCurrentAlarmsHTML = bigDaddyWrapper.innerHTML
     renderTasksHTML()
@@ -153,13 +151,8 @@ tasksTabHTML.onclick = function handleTaskTabClick(e) {
 }
 
 function highlightCurrentUserChoice() {
+  const isTasks = currentPageDisplayed == 'tasks'
+  tasksTabHTML.style.backgroundColor = isTasks ? 'cyan':'white'
+  alarmTabHTML.style.backgroundColor = isTasks ? 'white':'cyan'
 
-     if ( currentPageDisplayed == 'tasks') {
-      tasksTabHTML.style.backgroundColor = 'cyan'
-      alarmTabHTML.style.backgroundColor = 'white'
-     }
-     else if (currentPageDisplayed == 'alarms') {
-        alarmTabHTML.style.backgroundColor = 'cyan'
-        tasksTabHTML.style.backgroundColor = 'white'
-     }
 }
