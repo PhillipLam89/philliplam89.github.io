@@ -115,7 +115,7 @@ function updateAlarmsLIVE_HR_MIN() {
           allAlarms[i].isActive = false
           document.querySelector(`#alarmLabel-${i}`).remove()
           localStorage.setItem('alarms', JSON.stringify(allAlarms))
-          return
+          return void 0
        }
    }
 
@@ -123,6 +123,7 @@ function updateAlarmsLIVE_HR_MIN() {
 alarmTabHTML.onclick = function handleAlarmTabClick(e) {
   if (currentPageDisplayed !== 'alarms') {
     currentPageDisplayed = 'alarms'
+    highlightCurrentUserChoice() 
     savedCurrentTasksHTML = bigDaddyWrapper.innerHTML
     
     bigDaddyWrapper.innerHTML = renderAlarmsHTML()
@@ -139,10 +140,26 @@ alarmTabHTML.onclick = function handleAlarmTabClick(e) {
 }
 
 tasksTabHTML.onclick = function handleTaskTabClick(e) {
+  if (currentPageDisplayed != 'tasks') {
+    currentPageDisplayed = 'tasks'
+    highlightCurrentUserChoice() 
     alarmSectionWrapper.innerHTML = ''
     savedCurrentAlarmsHTML = bigDaddyWrapper.innerHTML
-    currentPageDisplayed = 'tasks'
     renderTasksHTML()
+  }
+
     intervals = clearInterval(intervals)
     intervals = setInterval(updateTime, 1000)
+}
+
+function highlightCurrentUserChoice() {
+
+     if ( currentPageDisplayed == 'tasks') {
+      tasksTabHTML.style.backgroundColor = 'cyan'
+      alarmTabHTML.style.backgroundColor = 'white'
+     }
+     else if (currentPageDisplayed == 'alarms') {
+        alarmTabHTML.style.backgroundColor = 'cyan'
+        tasksTabHTML.style.backgroundColor = 'white'
+     }
 }

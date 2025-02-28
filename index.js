@@ -16,10 +16,8 @@ let allTasks = [
                    startTimeSecs:16*3600+30*60, endTimeSecs:19*3600+30*60
     }
 ]
-// localStorage.clear()
+
 let currentPageDisplayed = 'tasks'
-let savedCurrentTasksHTML = null
-let savedCurrentAlarmsHTML = null
 let intervals = null
 
 allTasks = JSON.parse(localStorage.getItem('data'))
@@ -28,7 +26,8 @@ window.onload = function runOnBoot() { //loads current date
             updateToNewDay()
             renderTasksHTML()
             updateBtn.onclick  = updateBtnHandler
-            intervals = this.setInterval(updateTime, 999)
+            tasksTabHTML.style.backgroundColor = 'cyan'
+            intervals = this.setInterval(updateTime, 1000)
 
             //see helperFuncs.js for other functions
 }
