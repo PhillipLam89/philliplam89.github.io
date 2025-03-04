@@ -99,6 +99,8 @@ function addDeleteAlarmListeners() {
      }
   })
 }
+
+
 function updateAlarmsLIVE_HR_MIN() {
   const date = new Date()
   let exactTime = date.toLocaleString([], {
@@ -108,51 +110,17 @@ function updateAlarmsLIVE_HR_MIN() {
   
    for (let i = 0; i < allAlarms.length; i++) {
        const currentAlarm = document.querySelector(`#AmpmAlarmStartTime-${i}`)
-       if (exactTime == currentAlarm.textContent && document.querySelector(`#alarmInput-${i}`).checked) {
-          // alert('ALARM RINGING FOR ' + currentAlarm.textContent + ' ALARM')
+       const isVerified = exactTime == currentAlarm?.textContent && 
+                          document.querySelector(`#alarmInput-${i}`)?.checked
+       if (isVerified ) {
           currentAlarm.parentElement.style.color = 'red'
           currentAlarm.parentElement.style.textDecoration = 'line-through'
           allAlarms[i].isActive = false
-          document.querySelector(`#alarmLabel-${i}`).remove()
+          document.querySelector(`#alarmLabel-${i}`).remove()          
           localStorage.setItem('alarms', JSON.stringify(allAlarms))
+          openModal('alarmRang')
           return void 0
        }
    }
-
-}
-taskSwitcherHTML.onclick = highlightCurrentUserChoice
-alarmTabHTML.onclick = function handleAlarmTabClick(e) {
-  if (currentPageDisplayed !== 'alarms') {
-    currentPageDisplayed = 'alarms'
-    savedCurrentTasksHTML = bigDaddyWrapper.innerHTML
-    
-    bigDaddyWrapper.innerHTML = renderAlarmsHTML()
-    alarmSectionWrapper.innerHTML = alarmPageHTML
-    addDeleteAlarmListeners()
-    addAlarmToggleListeners()
-  }
-    setAlarmBtn.onclick = (e) => openModal(e.target.id)
-    intervals = clearInterval(intervals)
-    intervals = setInterval(displayHeaderExactTime,1000)
-  
-}
-
-tasksTabHTML.onclick = function handleTaskTabClick(e) {
-  if (currentPageDisplayed != 'tasks') {
-    currentPageDisplayed = 'tasks'
-    // highlightCurrentUserChoice() 
-    alarmSectionWrapper.innerHTML = ''
-    savedCurrentAlarmsHTML = bigDaddyWrapper.innerHTML
-    renderTasksHTML()
-  }
-
-    intervals = clearInterval(intervals)
-    intervals = setInterval(updateTime, 1000)
-}
-
-function highlightCurrentUserChoice() {
-  const isTasks = currentPageDisplayed == 'tasks'
-  tasksTabHTML.style.backgroundColor = isTasks ? 'cyan':'white'
-  alarmTabHTML.style.backgroundColor = isTasks ? 'white':'cyan'
 
 }

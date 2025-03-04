@@ -154,11 +154,7 @@ function displayHeaderExactTime() {
 
   secondsPassedInDay = getCurrentSecondsInDay()
   currentTimeHTML.textContent = `${exactTime}`
-
-  if (currentPageDisplayed === 'alarms') {
-    updateAlarmsLIVE_HR_MIN()
-
-  }
+  currentPageDisplayed == 'alarms' && updateAlarmsLIVE_HR_MIN()
 }
 function updateTime() {
      displayHeaderExactTime()

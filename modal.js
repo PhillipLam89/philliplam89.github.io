@@ -23,7 +23,7 @@ document.addEventListener("keydown", function (e) {
 // open modal function
 const defaultModalHTML =  
  ` <div class="flex"> 
-          <button class="btn-close">⨉</button>
+          <button id="modalCloseBtn" class="btn-close">⨉</button>
         </div>
 
         <div id="taskParentWrapper">
@@ -44,7 +44,7 @@ const defaultModalHTML =
 
 const infoModalHTML =  
 ` <div class="flex"> 
-        <button class="btn-close">⨉</button>
+        <button id="modalCloseBtn" class="btn-close">⨉</button>
   </div>
 
   <div id="taskParentWrapper">
@@ -59,7 +59,7 @@ const infoModalHTML =
 
 const setAlarmModal = 
  ` <div class="flex"> 
-        <button class="btn-close">⨉</button>
+        <button id="modalCloseBtn" class="btn-close">⨉</button>
    </div>
    <br>
    <div id="taskParentWrapper">
@@ -77,17 +77,36 @@ var allAlarms = [];
 
 allAlarms = JSON.parse(localStorage.getItem('alarms')) || allAlarms
 
-
+function createAlarmPopUp() {
+  let popUpHTML  = 
+  `<div class="flex"> 
+        <button id="modalCloseBtn" class="btn-close">⨉</button>
+   </div>
+   <br>
+  <section>
+     <div>9:10 ALARM RINGING</div>
+     <button id="alarmOkBtn">OK</button>
+  </section>
+  `
+  return popUpHTML
+}
 
  
 const openModal = function (EventPassedIn = false) {
   modal.classList.remove("hidden");
   overlay.classList.remove("hidden");
+
+  if (EventPassedIn == 'alarmRang') {
+    modal.innerHTML = createAlarmPopUp()
+    window.modalCloseBtn.onclick = closeModal
+    window.alarmOkBtn.onclick = closeModal
+    return
+  }
   
   if (EventPassedIn == 'setAlarmBtn')  {
     modal.innerHTML = setAlarmModal
     const closeModalBtn = document.querySelector(".btn-close");
-    closeModalBtn.addEventListener("click", closeModal);
+    window.modalCloseBtn.onclick = closeModal
     updateBtnAlarms.onclick = handleAlarmUpdateBtn
     return
   }
@@ -95,8 +114,9 @@ const openModal = function (EventPassedIn = false) {
   modal.innerHTML = EventPassedIn ? infoModalHTML : defaultModalHTML
   if(window.updateBtn) updateBtn.onclick  = updateBtnHandler;
 
-  const closeModalBtn = document.querySelector(".btn-close");
-  closeModalBtn.addEventListener("click", closeModal);
+  window.modalCloseBtn.onclick = closeModal
+  // const closeModalBtn = document.querySelector(".btn-close");
+  // closeModalBtn.addEventListener("click", closeModal);
 }
 infoBtn.onclick =  openModal //onclick will auto pass in Event, makin EventPassedIn true
 // open modal event
