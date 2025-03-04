@@ -1,4 +1,7 @@
 let secondsPassedInDay = getCurrentSecondsInDay()
+let currentStopwatchTime = 0 //mins:secs.millisecs
+let isStopWatchRunning  = false
+
 function getCurrentSecondsInDay() {
     const now = new Date()
     const hours = now.getHours()
@@ -19,6 +22,9 @@ let allTasks = [
 
 let currentPageDisplayed = 'tasks'
 let intervals = null
+
+
+
 
 
 
