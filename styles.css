@@ -249,11 +249,11 @@ button:hover {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: goldenrod;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px goldenrod;
 }
 
 input:checked + .slider:before {
@@ -298,6 +298,8 @@ input:checked + .slider:before {
 }
 #stopwatchBtnWrapper > * {
   height: 10dvh;
+  width: 10dvh;
+  border-radius: 50%;
 }
 #swTimeDisplayDiv {
   
