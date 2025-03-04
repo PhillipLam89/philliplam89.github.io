@@ -10,7 +10,7 @@
     color: #222;
     min-height: 100dvh;
     position: relative;
-    background-color: lavenderblush;
+    background-color: dodgerblue;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -297,7 +297,7 @@ input:checked + .slider:before {
   align-items: center;
 }
 #stopwatchBtnWrapper > * {
-  height: min-content;
+  height: 10dvh;
 }
 #swTimeDisplayDiv {
   
