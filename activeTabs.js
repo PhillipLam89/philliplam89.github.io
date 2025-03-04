@@ -14,7 +14,9 @@ function handleAlarmsPageSwitch() {
   
     bigDaddyWrapper.innerHTML = renderAlarmsHTML()
     alarmSectionWrapper.innerHTML = alarmPageHTML
-    window.bigDaddyWrapper.onclick = attachAlarmClickListeners
+    if (!window.bigDaddyWrapper.onclick) {
+      window.bigDaddyWrapper.onclick = attachAlarmClickListeners
+    }
 
     setAlarmBtn.onclick = (e) => openModal(e.target.id)
     intervals = clearInterval(intervals)
