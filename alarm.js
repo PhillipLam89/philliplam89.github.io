@@ -106,7 +106,7 @@ function updateAlarmsLIVE_HR_MIN() {
           document.querySelector(`#alarmLabel-${i}`).remove()          
           localStorage.setItem('alarms', JSON.stringify(allAlarms))
           openModal('alarmRang', i)
-          return void 0
+          break;
        }
    }
 
