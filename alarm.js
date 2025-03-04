@@ -9,6 +9,7 @@ var alarmPageHTML =
    </div>
  </div>
 `
+var alarmSound = new Audio('./alarmSound.mp3')
 
 function attachAlarmClickListeners(e) { //put on parent div
   const index = e.target.id.slice(e.target.id.indexOf('-')+1)

@@ -7,6 +7,8 @@ const closeModalBtn = document.querySelector(".btn-close");
 const closeModal = function () {
   modal.classList.add("hidden");
   overlay.classList.add("hidden");
+  alarmSound.pause()
+  alarmSound.currentTime = 0
 };
 
 // close the modal when the close button and overlay is clicked
@@ -105,6 +107,8 @@ const openModal = function (EventPassedIn = false, index) {
     modal.innerHTML = createAlarmPopUp(index)
     window.modalCloseBtn.onclick = closeModal
     window.alarmOkBtn.onclick = closeModal
+    alarmSound.loop = true
+    alarmSound.play()
     return
   }
   

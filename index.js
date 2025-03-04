@@ -20,6 +20,8 @@ let allTasks = [
 let currentPageDisplayed = 'tasks'
 let intervals = null
 
+
+
 allTasks = JSON.parse(localStorage.getItem('data'))
          || allTasks
 window.onload = function runOnBoot() { //loads current date
