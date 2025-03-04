@@ -68,6 +68,7 @@ function handleAlarmUpdateBtn(e) {
 function renderAlarmsHTML() {
   let format = ''
   bigDaddyWrapper.innerHTML = ''
+  allAlarms = allAlarms.sort((a,b) => a.countdownTimeSecs - b.countdownTimeSecs)
   allAlarms.forEach((alarm,i) => {
    format+= `
      <section id=alarm-${i}-wrapper >
@@ -98,7 +99,7 @@ function updateAlarmsLIVE_HR_MIN() {
    for (let i = 0; i < allAlarms.length; i++) {
        const currentAlarm = document.querySelector(`#AmpmAlarmStartTime-${i}`)
        const isVerified = exactTime == currentAlarm?.textContent && 
-                          document.querySelector(`#alarmInput-${i}`)?.checked
+                          document.querySelector(`#alarmInput-${i}`)?.checked;
        if (isVerified ) {
           currentAlarm.parentElement.style.color = 'red'
           currentAlarm.parentElement.style.textDecoration = 'line-through'
