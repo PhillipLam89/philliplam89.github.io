@@ -8,14 +8,14 @@ tasksTabHTML.onclick = () =>
 
 
 function handleAlarmsPageSwitch() {
+  
     currentPageDisplayed = 'alarms'
     savedCurrentTasksHTML = bigDaddyWrapper.innerHTML
   
     bigDaddyWrapper.innerHTML = renderAlarmsHTML()
     alarmSectionWrapper.innerHTML = alarmPageHTML
-    addDeleteAlarmListeners()
-    addAlarmToggleListeners()
-  
+    window.bigDaddyWrapper.onclick = attachAlarmClickListeners
+
     setAlarmBtn.onclick = (e) => openModal(e.target.id)
     intervals = clearInterval(intervals)
     intervals = setInterval(displayHeaderExactTime,1000)
@@ -24,6 +24,7 @@ function handleTasksPageSwitch() {
     currentPageDisplayed = 'tasks'
     alarmSectionWrapper.innerHTML = ''
     renderTasksHTML()
+    window.bigDaddyWrapper.onclick = ''
     intervals = clearInterval(intervals)
     intervals = setInterval(updateTime, 1000)
 }  

@@ -282,3 +282,8 @@ input:checked + .slider:before {
   border-radius: 50%;
 
 }
+#alarmOkBtn {
+  position: absolute;;
+  bottom: 25%;
+  padding: 10px;
+}

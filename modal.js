@@ -77,27 +77,32 @@ var allAlarms = [];
 
 allAlarms = JSON.parse(localStorage.getItem('alarms')) || allAlarms
 
-function createAlarmPopUp() {
+function createAlarmPopUp(index) {
   let popUpHTML  = 
   `<div class="flex"> 
         <button id="modalCloseBtn" class="btn-close">⨉</button>
    </div>
    <br>
   <section>
-     <div>9:10 ALARM RINGING</div>
+     <div id="alarmTimeDisplayDiv">9:10 ALARM RINGING</div>
      <button id="alarmOkBtn">OK</button>
   </section>
   `
+  setTimeout(() => {
+    alarmTimeDisplayDiv.textContent = 
+        allAlarms[index].startTimeAMPM + ' ' + allAlarms[index].isPM + ' ALARM IS RINGING!';
+  }, 2);
+  
   return popUpHTML
 }
 
  
-const openModal = function (EventPassedIn = false) {
+const openModal = function (EventPassedIn = false, index) {
   modal.classList.remove("hidden");
   overlay.classList.remove("hidden");
 
   if (EventPassedIn == 'alarmRang') {
-    modal.innerHTML = createAlarmPopUp()
+    modal.innerHTML = createAlarmPopUp(index)
     window.modalCloseBtn.onclick = closeModal
     window.alarmOkBtn.onclick = closeModal
     return
@@ -105,7 +110,6 @@ const openModal = function (EventPassedIn = false) {
   
   if (EventPassedIn == 'setAlarmBtn')  {
     modal.innerHTML = setAlarmModal
-    const closeModalBtn = document.querySelector(".btn-close");
     window.modalCloseBtn.onclick = closeModal
     updateBtnAlarms.onclick = handleAlarmUpdateBtn
     return
@@ -115,8 +119,6 @@ const openModal = function (EventPassedIn = false) {
   if(window.updateBtn) updateBtn.onclick  = updateBtnHandler;
 
   window.modalCloseBtn.onclick = closeModal
-  // const closeModalBtn = document.querySelector(".btn-close");
-  // closeModalBtn.addEventListener("click", closeModal);
 }
 infoBtn.onclick =  openModal //onclick will auto pass in Event, makin EventPassedIn true
 // open modal event

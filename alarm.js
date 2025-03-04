@@ -10,21 +10,23 @@ var alarmPageHTML =
  </div>
 `
 
-function addAlarmToggleListeners() {
-  const allAlarmSections = document.querySelectorAll('.switch')
-  allAlarmSections.forEach((alarm) => {
-    alarm.onclick = function(e) {
-      if (e.target.tagName !== 'SPAN') return;
-      const id = e.target.id.slice(e.target.id.indexOf('-')+1)
-      allAlarms[id].isActive = !allAlarms[id].isActive
-      const nodeToEdit = document.querySelector(`#alarm-${id}-wrapper`).children[0]
-      nodeToEdit.style.color = allAlarms[id].isActive ? 'black' : 'red'
-      nodeToEdit.style.textDecoration = allAlarms[id].isActive ? 'none' : 'line-through'
-      localStorage.setItem('alarms', JSON.stringify(allAlarms)) 
-      
-    }
-})
+function attachAlarmClickListeners(e) { //put on parent div
+  const index = e.target.id.slice(e.target.id.indexOf('-')+1)
+   if (e.target.tagName == 'BUTTON') { //to delete an alarm
+    allAlarms.splice(index,1)
+    document.querySelector(`#alarm-${index}-wrapper`).remove()
+    localStorage.setItem('alarms', JSON.stringify(allAlarms))
+    return
+   } 
+    if (e.target.tagName !== 'SPAN') return;
+    allAlarms[index].isActive = !allAlarms[index].isActive //to toggle alarms on/off
+    const nodeToEdit = document.querySelector(`#alarm-${index}-wrapper`).children[0]
+    nodeToEdit.style.color = allAlarms[index].isActive ? 'black' : 'red'
+    nodeToEdit.style.textDecoration = allAlarms[index].isActive ? 'none' : 'line-through'
+    localStorage.setItem('alarms', JSON.stringify(allAlarms)) 
 }
+
+
 function handleAlarmUpdateBtn(e) {
   let id = e.target.id
   if (!newAlarmTimer.value) {
@@ -57,9 +59,6 @@ function handleAlarmUpdateBtn(e) {
         
   allAlarms.push(timeObj) 
   bigDaddyWrapper.innerHTML = renderAlarmsHTML()
-  addDeleteAlarmListeners()
-  addAlarmToggleListeners()
-  // setTimeout(() => updateAlarmsLIVE_HR_MIN(), 1550)
 
   closeModal()
   localStorage.setItem('alarms', JSON.stringify(allAlarms)) 
@@ -88,18 +87,6 @@ function renderAlarmsHTML() {
 
   return format
 }
-function addDeleteAlarmListeners() {
-  const allAlarmDeleteBtns = document.querySelectorAll('.alarmDeleteBtn')
-  allAlarmDeleteBtns.forEach((btn) => {
-     btn.onclick = function() {
-        const index = this.id.slice(this.id.indexOf('-')+1)
-        allAlarms.splice(index,1)
-        document.querySelector(`#alarm-${index}-wrapper`).remove()
-        localStorage.setItem('alarms', JSON.stringify(allAlarms))
-     }
-  })
-}
-
 
 function updateAlarmsLIVE_HR_MIN() {
   const date = new Date()
@@ -118,7 +105,7 @@ function updateAlarmsLIVE_HR_MIN() {
           allAlarms[i].isActive = false
           document.querySelector(`#alarmLabel-${i}`).remove()          
           localStorage.setItem('alarms', JSON.stringify(allAlarms))
-          openModal('alarmRang')
+          openModal('alarmRang', i)
           return void 0
        }
    }
