@@ -1,6 +1,6 @@
 let secondsPassedInDay = getCurrentSecondsInDay()
 let currentStopwatchTime = 0 //mins:secs.millisecs
-let isStopWatchRunning  = false
+var isStopWatchRunning  = false
 
 function getCurrentSecondsInDay() {
     const now = new Date()
