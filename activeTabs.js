@@ -67,9 +67,7 @@ stopwatchHTML.onclick = function() {
                                'Start' ? 'Pause' : 'Start'
         }
     }
-    else {isStopWatchRunning = null;
-          window.stopwatchStartBtn.textContent = 'Start'
-    }
+    else return;
 }
 
 function handleAlarmsPageSwitch() {
