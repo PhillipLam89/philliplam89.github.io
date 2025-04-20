@@ -25,22 +25,50 @@ function msToTime(duration) {
 stopwatchHTML.onclick = function() {
     if (currentPageDisplayed != 'stopwatch') {
         currentPageDisplayed = 'stopwatch'
+
         bigDaddyWrapper.innerHTML = `<h1 id="swTimeDisplayDiv">0:00.00</h1>`
         alarmSectionWrapper.innerHTML = `
         <section id="stopwatchBtnWrapper">
           <button>Reset</button>
           <button id="stopwatchStartBtn">Start</button>
         </section`
+  
         intervals = clearInterval(intervals)
         intervals = setInterval(displayHeaderExactTime, 1000)
         window.stopwatchStartBtn.onclick = function() {
-          // intervals = clearInterval(intervals)
-          isStopWatchRunning = setInterval(function() {
-            currentStopwatchTime = currentStopwatchTime + 1
-              window.swTimeDisplayDiv.textContent = msToTime(currentStopwatchTime)
-           } ,10)
 
+          
+          let tempInterval = function() {
+              return setInterval(function() {
+          
+                currentStopwatchTime = currentStopwatchTime + 1
+    
+    
+                window.swTimeDisplayDiv.textContent = msToTime(currentStopwatchTime)
+              } ,10)
+          }
+
+          if (window.stopwatchStartBtn.textContent == 'Pause') {
+              clearInterval(isStopWatchRunning)
+              window.stopwatchStartBtn.textContent = 'Resume'
+              return
+          } 
+          if (window.stopwatchStartBtn.textContent == 'Resume') {
+                isStopWatchRunning = tempInterval()
+                window.stopwatchStartBtn.textContent = 'Pause'
+          }
+          if (isStopWatchRunning) {        
+            return
+          }
+
+          isStopWatchRunning = tempInterval()
+          window.stopwatchStartBtn.textContent = 
+                 window.stopwatchStartBtn.textContent ===
+                               'Start' ? 'Pause' : 'Start'
         }
+    }
+    else {isStopWatchRunning = null;
+          window.stopwatchStartBtn.textContent = 'Start'
     }
 }
 
