@@ -124,5 +124,5 @@ const openModal = function (EventPassedIn = false, index) {
 
   window.modalCloseBtn.onclick = closeModal
 }
-infoBtn.onclick =  openModal //onclick will auto pass in Event, makin EventPassedIn true
+// infoBtn.onclick =  openModal //onclick will auto pass in Event, makin EventPassedIn true
 // open modal event
