@@ -6,8 +6,65 @@ alarmTabHTML.onclick = () =>
 tasksTabHTML.onclick = () => 
       currentPageDisplayed != 'tasks' && handleTasksPageSwitch()
 
+stopwatchHTML.onclick = () => 
+  (currentPageDisplayed != 'stopwatch') && activateStopwatchPage(); 
+ 
+function activateStopwatchPage() {
+  currentPageDisplayed = 'stopwatch'
+
+  bigDaddyWrapper.innerHTML = `<h1 id="swTimeDisplayDiv">0:00.00</h1>`
+  alarmSectionWrapper.innerHTML = `
+  <section id="stopwatchBtnWrapper">
+    <button id="resetStopwatchBtn">Reset</button>
+    <button id="stopwatchStartBtn">Start</button>
+  </section`
+
+  intervals = clearInterval(intervals)
+  intervals = setInterval(displayHeaderExactTime, 1000)
+  
+  window.stopwatchStartBtn.onclick = handleStopwatchActions
+  window.resetStopwatchBtn.onclick = handleResetStopwatch
 
 
+  function handleStopwatchActions() {
+    const tempInterval = function() {
+      return setInterval(function() {    
+         currentStopwatchTime = currentStopwatchTime + 1
+         window.swTimeDisplayDiv.textContent = msToTime(currentStopwatchTime)
+       } ,10)
+   }
+
+   if (this.textContent == 'Pause') {
+       clearInterval(isStopWatchRunning)
+       this.textContent = 'Resume'
+       return
+   } 
+   if (this.textContent == 'Resume') {
+         isStopWatchRunning = tempInterval()
+         this.textContent = 'Pause'
+   }
+   if (isStopWatchRunning) {        
+     return
+   }
+
+   isStopWatchRunning = tempInterval()
+   this.textContent = 
+          this.textContent ===
+                        'Start' ? 'Pause' : 'Start';
+    
+  }
+  function handleResetStopwatch() {
+    if (window.stopwatchStartBtn.textContent !== 'Start') {
+      clearInterval(isStopWatchRunning)
+      isStopWatchRunning = null
+      currentStopwatchTime = 0
+      window.swTimeDisplayDiv.textContent = "0:00.00"
+      window.stopwatchStartBtn.textContent = 'Start'
+    
+    }
+  }
+
+}
 function msToTime(duration) {
   var milliseconds = parseInt((duration%100))
       , seconds = parseInt((duration/100)%60)
@@ -22,54 +79,6 @@ function msToTime(duration) {
   else hours = hours + ":"
   return hours + minutes + ":" + seconds + "." + milliseconds;
 }
-stopwatchHTML.onclick = function() {
-    if (currentPageDisplayed != 'stopwatch') {
-        currentPageDisplayed = 'stopwatch'
-
-        bigDaddyWrapper.innerHTML = `<h1 id="swTimeDisplayDiv">0:00.00</h1>`
-        alarmSectionWrapper.innerHTML = `
-        <section id="stopwatchBtnWrapper">
-          <button>Reset</button>
-          <button id="stopwatchStartBtn">Start</button>
-        </section`
-  
-        intervals = clearInterval(intervals)
-        intervals = setInterval(displayHeaderExactTime, 1000)
-        window.stopwatchStartBtn.onclick = function() {
-
-          
-          let tempInterval = function() {
-              return setInterval(function() {
-          
-                currentStopwatchTime = currentStopwatchTime + 1
-    
-    
-                window.swTimeDisplayDiv.textContent = msToTime(currentStopwatchTime)
-              } ,10)
-          }
-
-          if (window.stopwatchStartBtn.textContent == 'Pause') {
-              clearInterval(isStopWatchRunning)
-              window.stopwatchStartBtn.textContent = 'Resume'
-              return
-          } 
-          if (window.stopwatchStartBtn.textContent == 'Resume') {
-                isStopWatchRunning = tempInterval()
-                window.stopwatchStartBtn.textContent = 'Pause'
-          }
-          if (isStopWatchRunning) {        
-            return
-          }
-
-          isStopWatchRunning = tempInterval()
-          window.stopwatchStartBtn.textContent = 
-                 window.stopwatchStartBtn.textContent ===
-                               'Start' ? 'Pause' : 'Start'
-        }
-    }
-    else return;
-}
-
 function handleAlarmsPageSwitch() {
   
     currentPageDisplayed = 'alarms'
