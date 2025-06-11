@@ -28,7 +28,8 @@ body {
   max-height: 15dvh;
 }
 .stickyNote {
-  border: 3px solid goldenrod;
+  border: 5px solid dodgerblue;
+  border-radius: 10px;
   
 }
 button:hover {
