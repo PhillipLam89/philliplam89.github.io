@@ -1,0 +1,62 @@
+
+ * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+} 
+  
+body {
+
+    min-height: 100vh;
+}
+
+#allNotesContainer {
+  display: flex;
+  gap: 1em;
+  align-items:start;
+  flex-wrap: wrap;
+
+}
+ 
+#userInputForm {
+  text-align: center;
+
+}
+#userInputForm > textarea {
+  max-height: 15dvh;
+}
+.stickyNote {
+  border: 3px solid goldenrod;
+  
+}
+button:hover {
+  cursor: pointer;
+}
+button#clearAll {
+   position: absolute;
+   right: 0;
+   top: 1%;
+
+}
+.stickyNote {
+  display: flex;
+  flex-direction: column;
+  gap: .5em;
+}
+.deleteBtn {
+ 
+  color: red;
+  text-align: center;
+  padding: .7dvw;
+
+
+}
+p >span {
+
+  color: blueviolet;
+}
+.postBtnWrapper {
+  display: flex;
+  justify-content: space-between;
+}
