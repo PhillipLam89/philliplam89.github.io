@@ -5,31 +5,39 @@ window.userInputForm.onsubmit = function(e) {
     e.preventDefault()
     const submittedNote = e.target.children[0].value
     e.target.children[0].value = ''
-    if (!submittedNote.trim()) {
-        alert('cant be empty')
-        return
-    }
-    const hasBannedChars = (submittedNote.includes('{') && submittedNote.includes('}'))
-                                                   ||
-                            (submittedNote.includes('<') && submittedNote.includes('>') )
-    if (hasBannedChars) {
-          alert('NO CODE SNIPPETS!')
-           return      
-    }
-  
-    if (allNotesArray.length) {
-        const currentNoteStrings = []
-        allNotesArray.forEach(note => currentNoteStrings.push(note.post.trim().toLowerCase()))
-        if (currentNoteStrings.includes(submittedNote.trim().toLowerCase())) {
-            alert('NO DUPLICATES ALLOWED')
-            return
-        }
-    }
+    if (isItEmptyString(submittedNote)) return 
+    if (doesItHaveCodeSnippets(submittedNote)) return
+    if (isStringDuplicated(submittedNote)) return
 
     storeNewNote(submittedNote)
     renderNewNote()
 }
 
+function isItEmptyString(str) {
+    if (!str.trim()) {
+        alert('cant be empty')
+        return true
+    }
+}
+function doesItHaveCodeSnippets(str) {
+        const hasBannedChars = (str.includes('{') && str.includes('}'))
+                                                   ||
+                            (str.includes('<') && str.includes('>') )
+    if (hasBannedChars) {
+          alert('NO CODE SNIPPETS!')
+           return true   
+    }
+}
+function isStringDuplicated(str) {
+        if (allNotesArray.length) {
+        const currentNoteStrings = []
+        allNotesArray.forEach(note => currentNoteStrings.push(note.post.trim().toLowerCase()))
+        if (currentNoteStrings.includes(str.trim().toLowerCase())) {
+            alert('NO DUPLICATES ALLOWED')
+            return true
+        }
+    }
+}
 window.clearAll.onclick = function() {
     window.allNotesContainer.innerHTML = ''
     this.disabled = true
