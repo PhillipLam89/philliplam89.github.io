@@ -8,6 +8,14 @@ window.userInputForm.onsubmit = function(e) {
         alert('cant be empty')
         return
     }
+    if (allNotesArray.length) {
+        const currentNoteStrings = []
+        allNotesArray.forEach(note => currentNoteStrings.push(note.post.trim().toLowerCase()))
+        if (currentNoteStrings.includes(submittedNote.trim().toLowerCase())) {
+            alert('NO DUPLICATES ALLOWED')
+            return
+        }
+    }
 
     storeNewNote(submittedNote)
     renderNewNote()
@@ -71,8 +79,7 @@ function handlePostDelete(e) {
    const removalIndex = allNotesArray.findIndex(post => 
                         post.post === selectedText)
    allNotesArray.splice(removalIndex,1)
-   if (!allNotesArray.length) window.clearAll.disabled = true
-   
+   !allNotesArray.length && (window.clearAll.disabled = true)
 }
 
 function storeNewNote(note) {
