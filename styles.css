@@ -7,7 +7,7 @@
 } 
   
 body {
-    background-color: bisque;
+    background-color: goldenrod;
     min-height: 100vh;
 }
 
@@ -24,6 +24,7 @@ body {
 
 }
 #userInputForm > textarea {
+  font-size: 18px;
   max-height: 15dvh;
 }
 .stickyNote {
