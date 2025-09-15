@@ -44,17 +44,7 @@ class Projectile {
         if (!this.free) {
             context.save()
             context.beginPath()
-            
-            const constantMod = function(numX,numY) {
-                
-                const answerArr = numX >= 400 ? [1] : [-1]
-                answerArr.push(numY >= 400 ? -1 : 1)
-             
-                return answerArr
-            }
-            let [modX] = constantMod(this.x, this.y)
-
-            
+              
             context.arc(this.x,this.y,this.radius,0, angle360)
             context.fillStyle = 'gold'
             context.fill()
@@ -76,6 +66,44 @@ class Projectile {
     }
 
 }
+
+class Enemy {
+    constructor(game) {
+        this.game = game
+        this.x = 0
+        this.y = 0
+        this.radius = 40
+        this.width = this.radius * 2
+        this.height = this.radius * 2
+        this.speedX = 0
+        this.speedY = 0
+        this.free = true
+    }
+    start() {
+        this.free = false
+        this.x = Math.random() * this.game.width
+        this.y = Math.random() * this.game.height
+        const aim = this.game.calcAim(this, this.game.planet) // aim must be calculated AFTER enemy x/y positions
+        this.speedX = aim[0]
+        this.speedY = aim[1]
+    }
+    reset() {
+        this.free = true
+    }
+    draw(context) {
+        context.beginPath()
+        context.arc(this.x, this.y, this.radius, 0, angle360)
+        context.stroke()
+    }
+    update() {
+        if (!this.free) {
+            this.x+= this.speedX
+            this.y+= this.speedY
+            // ememy count and spawns will be controlled inside Game Class
+        }
+    }
+
+}   
 class Game { //control everything here
     constructor(canvas) {
         this.canvas = canvas
@@ -90,6 +118,15 @@ class Game { //control everything here
         this.numberOfProjectiles = 15
         this.createProjectilePool() //fills this.projectilePool array with ammo
       
+        //manage enemy spawns below
+        this.enemyPool = []
+        this.numberOfEnemies = 4
+        this.createEnemyPool()
+        this.enemyPool[0].start()
+        this.enemyPool[1].start()
+        this.enemyPool[2].start()
+        this.enemyPool[3].start()
+   
 
         this.mouse = {
             x:0,
@@ -124,6 +161,11 @@ class Game { //control everything here
             proj.draw(context)
             proj.update()
         })
+
+        this.enemyPool.forEach(enemy => {
+            enemy.draw(context)
+            enemy.update()
+        })        
    
     }
     calcAim(a,b) {
@@ -135,13 +177,20 @@ class Game { //control everything here
         return new Array(aimX,aimY,dx,dy, distance)
     }
     createProjectilePool() {
-
         while (this.projectilePool.length < this.numberOfProjectiles) {
              this.projectilePool.push(new Projectile(this))
         }
     }
     getProjectile() {
         return this.projectilePool.find(proj => proj.free)
+    }
+    createEnemyPool() {
+        while (this.enemyPool.length < this.numberOfEnemies) {
+             this.enemyPool.push(new Enemy(this))
+        }        
+    }
+    getEnemy() {
+        return this.enemyPool.find(enemy => enemy.free)
     }
 }
 
@@ -161,7 +210,9 @@ class Player { //gets instantiated when class Game runs
         context.save()
         context.translate(this.x,this.y)
         context.rotate(this.angle)
+      
         context.drawImage(this.image, -this.radius, -this.radius)
+      
         if (this.game.debug) {
             context.beginPath()
             context.strokeStyle = 'dodgerblue'
@@ -188,7 +239,7 @@ class Player { //gets instantiated when class Game runs
     shoot() {
         const projectile = this.game.getProjectile()
         if (projectile) projectile.start(this.x + this.radius * this.aim[0], this.y + this.radius * this.aim[1], this.aim[0], this.aim[1])
-        console.log(this.angle, this.game.mouse)
+     
     }
 }
 var game = null
