@@ -91,15 +91,25 @@ class Enemy {
         this.free = true
     }
     draw(context) {
-        context.beginPath()
-        context.arc(this.x, this.y, this.radius, 0, angle360)
-        context.stroke()
+        if (!this.free) {
+            context.beginPath()
+            context.arc(this.x, this.y, this.radius, 0, angle360)
+            context.stroke()
+        }
+
     }
     update() {
         if (!this.free) {
             this.x+= this.speedX
             this.y+= this.speedY
             // ememy count and spawns will be controlled inside Game Class
+
+            // if (this.game.checkCollision(this, this.game.planet) || this.game.checkCollision(this, this.game.player)) {
+            //     this.reset()
+            // }
+
+            if (this.game.checkCollision(this, this.game.planet)) {this.reset()}
+            if (this.game.checkCollision(this, this.game.player)) {this.reset()}
         }
     }
 
@@ -120,7 +130,7 @@ class Game { //control everything here
       
         //manage enemy spawns below
         this.enemyPool = []
-        this.numberOfEnemies = 4
+        this.numberOfEnemies = 22
         this.createEnemyPool()
         this.enemyPool[0].start()
         this.enemyPool[1].start()
@@ -175,6 +185,13 @@ class Game { //control everything here
         const aimX = dx / distance * -1 //cosine of angle (use +1 for hard mode)
         const aimY = dy / distance  * -1//sine of angle (use +1 for hard mode)
         return new Array(aimX,aimY,dx,dy, distance)
+    }
+    checkCollision(a,b) {
+        const dx = a.x-b.x
+        const dy = a.y-b.y
+        const distance = Math.hypot(dx,dy)     
+        const sumOfRadii = a.radius + b.radius
+        return distance <= sumOfRadii   
     }
     createProjectilePool() {
         while (this.projectilePool.length < this.numberOfProjectiles) {
