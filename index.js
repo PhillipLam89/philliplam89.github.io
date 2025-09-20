@@ -72,15 +72,19 @@ class Enemy {
         this.game = game
         this.x = 0
         this.y = 0
-        this.radius = 40
+        this.radius = 55
         this.width = this.radius * 2
         this.height = this.radius * 2
         this.speedX = 0
         this.speedY = 0
         this.free = true
+        //control enemy approach speed below  (1 = default, 0.5 = half Speed)
+        this.velocityX_MOD = 1.2
+        this.velocityY_MOD = 1.1     
     }
     start() {
         this.free = false
+
         if (Math.random() < 0.5) {
             this.x = Math.random() * this.game.width
             this.y = Math.random() < .5 ? 0 : this.game.height
@@ -108,8 +112,8 @@ class Enemy {
     }
     update() {
         if (!this.free) {
-            this.x+= this.speedX
-            this.y+= this.speedY
+            this.x+= this.speedX * this.velocityX_MOD 
+            this.y+= this.speedY * this.velocityY_MOD 
             // ememy count and spawns will be controlled inside Game Class
             const hasCollided = // checks if enemy hits player or planet
                 (this.game.checkCollision(this, this.game.planet) 
@@ -146,11 +150,11 @@ class Game { //control everything here
       
         //manage enemy spawns below
         this.enemyPool = []
-        this.numberOfEnemies = 22
+        this.numberOfEnemies = 2
         this.createEnemyPool()
         this.enemyPool[0].start()
         this.enemyTimer = 0
-        this.enemyInterval = 666 //how many ms until an enemy spawns
+        this.enemyInterval = 1111 //how many ms until an enemy spawns
    
 
         this.mouse = {
@@ -289,8 +293,21 @@ class Player { //gets instantiated when class Game runs
     }
 }
 var game = null
+
+
 window.onload = function() {
+    // const toggleFS = function enterFullscreenForElement(myElement) {
+    // if (myElement.requestFullscreen) {
+    //     myElement.requestFullscreen();
+    
+    // } else if (myElement.webkitRequestFullscreen) { /* Safari */
+    //     myElement.webkitRequestFullscreen();
+    // } else if (myElement.msRequestFullscreen) { /* IE11 */
+    //     myElement.msRequestFullscreen();
+    // }
+    // }
     const canvas = window.canvas1
+    
     const ctx = canvas.getContext('2d')
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
@@ -298,7 +315,7 @@ window.onload = function() {
     ctx.lineWidth = 4
 
     game = new Game(canvas)
-    
+
 
     let lastTimer = 0
     function animate(timeStamp) {
