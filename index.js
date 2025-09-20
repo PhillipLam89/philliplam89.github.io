@@ -25,8 +25,8 @@ class Projectile {
         this.x;
         this.y;
         this.radius = 10
-        this.speedX = 1
-        this.speedY = 1
+        this.speedX = 2
+        this.speedY = 2
         this.speedMod = 4
         this.free = true // true means obj is inactive, ready to be used
     }
@@ -81,8 +81,16 @@ class Enemy {
     }
     start() {
         this.free = false
-        this.x = Math.random() * this.game.width
-        this.y = Math.random() * this.game.height
+        if (Math.random() < 0.5) {
+            this.x = Math.random() * this.game.width
+            this.y = Math.random() < .5 ? 0 : this.game.height
+        } else {
+            this.x = Math.random() < .5 ? 0 : this.game.width
+            this.y = Math.random() * this.game.height
+        } // makes sure enemies spawn from sides and NOT in middle
+
+        // this.x = Math.random() * this.game.width
+        // this.y = Math.random() * this.game.height
         const aim = this.game.calcAim(this, this.game.planet) // aim must be calculated AFTER enemy x/y positions
         this.speedX = aim[0]
         this.speedY = aim[1]
@@ -103,13 +111,21 @@ class Enemy {
             this.x+= this.speedX
             this.y+= this.speedY
             // ememy count and spawns will be controlled inside Game Class
+            const hasCollided = // checks if enemy hits player or planet
+                (this.game.checkCollision(this, this.game.planet) 
+                                        || 
+                 this.game.checkCollision(this, this.game.player))
+ 
+            hasCollided && this.reset()
+       
 
-            // if (this.game.checkCollision(this, this.game.planet) || this.game.checkCollision(this, this.game.player)) {
-            //     this.reset()
-            // }
-
-            if (this.game.checkCollision(this, this.game.planet)) {this.reset()}
-            if (this.game.checkCollision(this, this.game.player)) {this.reset()}
+            //check for collision between enemy & player bullets
+            this.game.projectilePool.forEach(prj => {
+                if (!prj.free && this.game.checkCollision(this, prj)) {
+                    prj.reset() //erases player bullets as they hit enemies
+                    this.reset() //deletes enemies that are hit
+                }
+            })
         }
     }
 
@@ -125,7 +141,7 @@ class Game { //control everything here
 
         //manage projectiles below
         this.projectilePool = []
-        this.numberOfProjectiles = 15
+        this.numberOfProjectiles = 135
         this.createProjectilePool() //fills this.projectilePool array with ammo
       
         //manage enemy spawns below
@@ -133,9 +149,8 @@ class Game { //control everything here
         this.numberOfEnemies = 22
         this.createEnemyPool()
         this.enemyPool[0].start()
-        this.enemyPool[1].start()
-        this.enemyPool[2].start()
-        this.enemyPool[3].start()
+        this.enemyTimer = 0
+        this.enemyInterval = 666 //how many ms until an enemy spawns
    
 
         this.mouse = {
@@ -150,6 +165,7 @@ class Game { //control everything here
         window.onmousedown =  (e) => {
             this.mouse.x = e.offsetX
             this.mouse.y = e.offsetY
+    
             this.player.shoot() //shoot projectile when user clicks on coord-plane
         }
         window.onkeyup =  (e) => {
@@ -160,7 +176,7 @@ class Game { //control everything here
              }
         }        
     }
-    render(context) {
+    render(context, deltaTime) {
         this.planet.draw(context)
         this.player.draw(context)
         this.player.update()
@@ -176,6 +192,14 @@ class Game { //control everything here
             enemy.draw(context)
             enemy.update()
         })        
+
+        // spawn enemy periodically below
+   
+        if (this.enemyTimer < this.enemyInterval) this.enemyTimer+= deltaTime
+        else {
+            this.enemyTimer = 0
+            this.getEnemy() && this.getEnemy().start()
+        } 
    
     }
     calcAim(a,b) {
@@ -255,27 +279,35 @@ class Player { //gets instantiated when class Game runs
     }
     shoot() {
         const projectile = this.game.getProjectile()
-        if (projectile) projectile.start(this.x + this.radius * this.aim[0], this.y + this.radius * this.aim[1], this.aim[0], this.aim[1])
-     
+        const [x,y,speedX,speedY] = 
+              [this.x + this.radius * this.aim[0], 
+              this.y + this.radius * this.aim[1], 
+              this.aim[0], 
+              this.aim[1]]
+
+        projectile && projectile.start(x,y,speedX,speedY)     
     }
 }
 var game = null
 window.onload = function() {
     const canvas = window.canvas1
     const ctx = canvas.getContext('2d')
-    canvas.width = 800
-    canvas.height = 800
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
     ctx.strokeStyle = 'white'
     ctx.lineWidth = 4
 
     game = new Game(canvas)
     
 
-
-    function animate() {
+    let lastTimer = 0
+    function animate(timeStamp) {
+        const deltaTime = timeStamp - lastTimer
+        lastTimer = timeStamp
         ctx.clearRect(0,0,canvas.width,canvas.height)
-        game.render(ctx)
+        game.render(ctx, deltaTime)
         window.requestAnimationFrame(animate)
+       
     }
     window.requestAnimationFrame(animate)
 }
