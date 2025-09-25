@@ -1,4 +1,5 @@
 var angle360 = Math.PI * 2
+var game = null
 class Planet {
     constructor(game) {
         this.game = game
@@ -72,14 +73,14 @@ class Enemy {
         this.game = game
         this.x = 0
         this.y = 0
-        this.radius = 55
+        this.radius = 40
         this.width = this.radius * 2
         this.height = this.radius * 2
         this.speedX = 0
         this.speedY = 0
         this.free = true
         //control enemy approach speed below  (1 = default, 0.5 = half Speed)
-        this.velocityX_MOD = 1.2
+        this.velocityX_MOD = 1.1
         this.velocityY_MOD = 1.1     
     }
     start() {
@@ -87,14 +88,13 @@ class Enemy {
 
         if (Math.random() < 0.5) {
             this.x = Math.random() * this.game.width
-            this.y = Math.random() < .5 ? 0 : this.game.height
+            this.y = Math.random() < .5 ? -this.radius : this.game.height + this.radius
         } else {
-            this.x = Math.random() < .5 ? 0 : this.game.width
+            this.x = Math.random() < .5 ? -this.radius : this.game.width + this.game.radius
             this.y = Math.random() * this.game.height
         } // makes sure enemies spawn from sides and NOT in middle
 
-        // this.x = Math.random() * this.game.width
-        // this.y = Math.random() * this.game.height
+       
         const aim = this.game.calcAim(this, this.game.planet) // aim must be calculated AFTER enemy x/y positions
         this.speedX = aim[0]
         this.speedY = aim[1]
@@ -104,9 +104,14 @@ class Enemy {
     }
     draw(context) {
         if (!this.free) {
+            context.drawImage(this.image,0,0, this.width, this.height,this.x - this.radius, this.y - this.radius,this.width, this.height)
+            context.save()
+            context.strokeStyle = 'forestgreen'
+            context.lineWidth = 2
             context.beginPath()
-            context.arc(this.x, this.y, this.radius, 0, angle360)
-            context.stroke()
+            // context.arc(this.x, this.y, this.radius, 0, 2*Math.PI)
+            // context.stroke()
+            context.restore()
         }
 
     }
@@ -134,6 +139,15 @@ class Enemy {
     }
 
 }   
+
+class Asteroid extends Enemy {
+    constructor(game) {
+        super(game)
+        this.image = window.asteroid
+
+    } 
+}
+
 class Game { //control everything here
     constructor(canvas) {
         this.canvas = canvas
@@ -150,11 +164,11 @@ class Game { //control everything here
       
         //manage enemy spawns below
         this.enemyPool = []
-        this.numberOfEnemies = 2
+        this.numberOfEnemies = 22
         this.createEnemyPool()
         this.enemyPool[0].start()
         this.enemyTimer = 0
-        this.enemyInterval = 1111 //how many ms until an enemy spawns
+        this.enemyInterval = 700 //how many ms until an enemy spawns
    
 
         this.mouse = {
@@ -231,7 +245,7 @@ class Game { //control everything here
     }
     createEnemyPool() {
         while (this.enemyPool.length < this.numberOfEnemies) {
-             this.enemyPool.push(new Enemy(this))
+             this.enemyPool.push(new Asteroid(this))
         }        
     }
     getEnemy() {
@@ -292,7 +306,7 @@ class Player { //gets instantiated when class Game runs
         projectile && projectile.start(x,y,speedX,speedY)     
     }
 }
-var game = null
+
 
 
 window.onload = function() {
