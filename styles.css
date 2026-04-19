@@ -1,0 +1,40 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+  }
+  button:hover {
+    cursor: pointer;
+  }
+  body {
+     display: flex;
+    height: 100dvh;
+    justify-content: center;
+    align-items: center;
+  }
+  
+#container {
+  border: 2px solid red;
+
+
+}
+
+#container > *  > button {
+  position: relative;
+
+  padding: 3dvh;
+}
+#container > *  > button > span {
+    position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bolder;
+  font-size: 22px;
+}
+
+.winner {
+  background-color: goldenrod;
+}
